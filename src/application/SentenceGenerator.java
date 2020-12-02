@@ -1,6 +1,7 @@
 package application;
 
 import grammar.Sentence;
+import grammar.SentencePattern;
 import words.Noun;
 import words.Verb;
 import words.Word;
@@ -12,8 +13,9 @@ import java.util.Scanner;
 
 public class SentenceGenerator {
     private static SentenceGenerator mSentenceGenerator;
-    private static ArrayList<Noun> nouns;
-    private static ArrayList<Verb> verbs;
+    private static ArrayList<Word> nouns;
+    private static ArrayList<Word> verbs;
+    private static ArrayList<ArrayList<Word>> words;
     private Sentence sentence;
 
 
@@ -27,6 +29,7 @@ public class SentenceGenerator {
     private SentenceGenerator() {
         nouns = new ArrayList<>();
         verbs = new ArrayList<>();
+        words = new ArrayList<>();
         Scanner scan = null;
         try {
             scan = new Scanner(new File("vocab/3.csv"));
@@ -46,15 +49,17 @@ public class SentenceGenerator {
                     break;
             }
         }
+        words.add(nouns);
+        words.add(verbs);
         generate();
     }
 
     public void generate() {
-        ArrayList<Word> words = new ArrayList<>();
-        words.add(nouns.get((int) (Math.random() * nouns.size())));
-        words.add(verbs.get((int) (Math.random() * verbs.size())));
-        words.add(nouns.get((int) (Math.random() * nouns.size())));
-        sentence = new Sentence(words);
+        sentence = new Sentence(SentencePattern.pattern1);
+        while (!sentence.isAssembled()) {
+            sentence.add(words.get(sentence.nextRequest()).get
+                    ((int) (Math.random() * words.get(sentence.nextRequest()).size())));
+        }
     }
 
     public String english() {

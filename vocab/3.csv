@@ -26,16 +26,16 @@ do,하다,verb
 speak,말하다,verb
 understand,이해하다,verb
 like,좋아하다,verb
-be big,크다,verb
-be small,작다,verb
-be new,새롭다,verb
-be old,늙다,verb
-be expensive,비싸다,verb
-be cheap,싸다,verb
-be beautiful,아름답다,verb
-be fat,뚱뚱하다,verb
-be long,길다,verb
-be good,좋다,verb
+be big,크다,adjective
+be small,작다,adjective
+be new,새롭다,adjective
+be old,늙다,adjective
+be expensive,비싸다,adjective
+be cheap,싸다,adjective
+be beautiful,아름답다,adjective
+be fat,뚱뚱하다,adjective
+be long,길다,adjective
+be good,좋다,adjective
 possessive,의,other
 very,아주,adverb
 too,너무,adverb
