@@ -23,9 +23,9 @@ public class Sentence {
     }
 
     public int nextRequest() {
-        if (Noun.class.equals(pattern.getPattern().get(words.size()).getWord())) {
+        if (Noun.class.equals(pattern.getPattern()[words.size()].getWord())) {
             return 0;
-        } else if (Verb.class.equals(pattern.getPattern().get(words.size()).getWord())) {
+        } else if (Verb.class.equals(pattern.getPattern()[words.size()].getWord())) {
             return 1;
         }
         return -1;
