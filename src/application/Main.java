@@ -5,10 +5,6 @@ public class Main {
         SentenceGenerator sentenceGenerator = SentenceGenerator.getInstance();
         System.out.println(sentenceGenerator.english());
         System.out.println(sentenceGenerator.korean());
-        Constants.Words[] wordTypes = Constants.Words.values();
-        for (Constants.Words word : wordTypes) {
-            System.out.println(word.val);
-        }
     }
 
 }

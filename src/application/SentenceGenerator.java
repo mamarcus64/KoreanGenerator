@@ -15,7 +15,7 @@ public class SentenceGenerator {
     private static SentenceGenerator mSentenceGenerator;
     private static ArrayList<Word> nouns;
     private static ArrayList<Word> verbs;
-    private static ArrayList<ArrayList<Word>> words;
+    private static ArrayList<Word>[] words;
     private Sentence sentence;
 
 
@@ -27,38 +27,15 @@ public class SentenceGenerator {
     }
 
     private SentenceGenerator() {
-        nouns = new ArrayList<>();
-        verbs = new ArrayList<>();
-        words = new ArrayList<>();
-        Scanner scan = null;
-        try {
-            scan = new Scanner(new File("vocab/3.csv"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        while (scan.hasNext()) {
-            String[] line = scan.nextLine().split(",");
-            switch (line[2]) {
-                case "noun":
-                    nouns.add(new Noun(line[0], line[1]));
-                    break;
-                case "verb":
-                    verbs.add(new Verb(line[0], line[1]));
-                    break;
-                default:
-                    break;
-            }
-        }
-        words.add(nouns);
-        words.add(verbs);
+        words = WordDatabase.getInstance().getWords();
         generate();
     }
 
     public void generate() {
         sentence = new Sentence(SentencePattern.pattern1);
         while (!sentence.isAssembled()) {
-            sentence.add(words.get(sentence.nextRequest()).get
-                    ((int) (Math.random() * words.get(sentence.nextRequest()).size())));
+            sentence.add(words[sentence.nextRequest()].get
+                    ((int) (Math.random() * words[sentence.nextRequest()].size())));
         }
     }
 
