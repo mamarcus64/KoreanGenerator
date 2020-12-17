@@ -1,5 +1,6 @@
 package grammar;
 
+import application.Constants;
 import words.Noun;
 import words.Verb;
 import words.Word;
@@ -23,19 +24,19 @@ public class Sentence {
     }
 
     public int nextRequest() {
-        if (Noun.class.equals(pattern.getPattern()[words.size()].getWord())) {
-            return 0;
-        } else if (Verb.class.equals(pattern.getPattern()[words.size()].getWord())) {
-            return 1;
-        }
-        return -1;
+        return Constants.wordType(pattern.getEnglish().get(words.size()).getWord());
     }
 
     public void add(Word word) {
         words.add(word);
         if (words.size() == pattern.length()) {
             assembled = true;
+            cleanSentence();
         }
+    }
+
+    public void cleanSentence() {
+        EnglishWordFilters.capitalize(words.get(pattern.getEnglish().indexOf(GrammarPart.SUBJECT)));
     }
 
     public String english() throws IllegalStateException {

@@ -4,18 +4,18 @@ import words.Noun;
 import words.Verb;
 
 public enum GrammarPart {
-    SUBJECT(Noun.class),
-    DIRECT_OBJECT(Noun.class),
-    TRANSITIVE_VERB(Verb.class),
-    INTRANSITIVE_VERB(Verb.class);
+    SUBJECT("noun"),
+    DIRECT_OBJECT("noun"),
+    TRANSITIVE_VERB("verb"),
+    INTRANSITIVE_VERB("verb");
 
-    private Class word;
+    private String word;
 
-    private GrammarPart(Class word) {
+    private GrammarPart(String word) {
         this.word = word;
     }
 
-    public Class getWord() {
+    public String getWord() {
         return word;
     }
 }

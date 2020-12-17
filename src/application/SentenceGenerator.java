@@ -32,7 +32,7 @@ public class SentenceGenerator {
     }
 
     public void generate() {
-        sentence = new Sentence(SentencePattern.pattern1);
+        sentence = new Sentence(SentencePattern.pattern2);
         while (!sentence.isAssembled()) {
             sentence.add(words[sentence.nextRequest()].get
                     ((int) (Math.random() * words[sentence.nextRequest()].size())));

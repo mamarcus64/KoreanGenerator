@@ -18,12 +18,7 @@ public class WordDatabase {
 
 
     private WordDatabase() {
-        List<Constants.Words> wordEnums = Arrays.asList(Constants.Words.values());
-        List<String> wordTypes = new ArrayList<>();
-        for (Constants.Words wordEnum : wordEnums) {
-            wordTypes.add(wordEnum.val);
-        }
-        words = new ArrayList[wordTypes.size()];
+        words = new ArrayList[Constants.wordTypeNumber()];
         for (int i = 0; i < words.length; i++) {
             words[i] = new ArrayList<>();
         }
@@ -47,7 +42,7 @@ public class WordDatabase {
                     //creates a new instance of the given word subclass and adds it to the appropriate words arraylist
                     Word word = (Word) (Class.forName("words." + EnglishWordFilters.capitalize(line[2]))
                             .getConstructor(String.class, String.class).newInstance(line[0], line[1]));
-                    words[wordTypes.indexOf(line[2].toLowerCase())].add(word);
+                    words[Constants.wordType(line[2].toLowerCase())].add(word);
                 } catch (Exception e) {
                     if (Constants.DEBUG_ON) {
                         System.out.println(e);
