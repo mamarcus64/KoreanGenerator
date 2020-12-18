@@ -28,15 +28,26 @@ public class Sentence {
     }
 
     public void add(Word word) {
-        words.add(word);
+        words.add(word.clone());
         if (words.size() == pattern.length()) {
             assembled = true;
             cleanSentence();
         }
     }
 
-    public void cleanSentence() {
-        EnglishWordFilters.capitalize(words.get(pattern.getEnglish().indexOf(GrammarPart.SUBJECT)));
+    private Word patternWord(GrammarPart part) {
+        int index = pattern.getEnglish().indexOf(part);
+        return index == -1 ? null : words.get(index);
+    }
+
+    private void cleanSentence() {
+        EnglishWordFilters.articulate(patternWord(GrammarPart.SUBJECT));
+        EnglishWordFilters.articulate(patternWord(GrammarPart.DIRECT_OBJECT));
+        EnglishWordFilters.capitalize(patternWord(GrammarPart.SUBJECT));
+        EnglishWordFilters.toTense(patternWord(GrammarPart.INTRANSITIVE_VERB),
+                Constants.Tenses.FUTURE, Constants.Person.THIRD);
+        EnglishWordFilters.toTense(patternWord(GrammarPart.TRANSITIVE_VERB),
+                Constants.Tenses.FUTURE, Constants.Person.THIRD);
     }
 
     public String english() throws IllegalStateException {

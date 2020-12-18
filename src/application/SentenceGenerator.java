@@ -28,7 +28,6 @@ public class SentenceGenerator {
 
     private SentenceGenerator() {
         words = WordDatabase.getInstance().getWords();
-        generate();
     }
 
     public void generate() {
