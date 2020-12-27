@@ -1,8 +1,10 @@
 package application;
 
+import java.text.Normalizer;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
         SentenceGenerator sentenceGenerator = SentenceGenerator.getInstance();
         Scanner buffer = new Scanner(System.in);

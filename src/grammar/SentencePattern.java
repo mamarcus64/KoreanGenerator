@@ -1,37 +1,34 @@
 package grammar;
 
-import words.Word;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class SentencePattern {
 
     public static SentencePattern pattern1 = new SentencePattern(
             new GrammarPart[] {GrammarPart.SUBJECT, GrammarPart.INTRANSITIVE_VERB},
-            new GrammarPart[] {GrammarPart.SUBJECT, GrammarPart.INTRANSITIVE_VERB});
+            new Integer[] {0, 1});
 
     public static SentencePattern pattern2 = new SentencePattern(
             new GrammarPart[] {GrammarPart.SUBJECT, GrammarPart.TRANSITIVE_VERB, GrammarPart.DIRECT_OBJECT},
-            new GrammarPart[] {GrammarPart.SUBJECT, GrammarPart.DIRECT_OBJECT, GrammarPart.INTRANSITIVE_VERB});
+            new Integer[] {0, 2, 1});
 
-    ArrayList<GrammarPart> english;
-    ArrayList<GrammarPart> korean;
-    private SentencePattern(GrammarPart[] english, GrammarPart[] korean) {
-        this.english = new ArrayList<>(Arrays.asList(english));
-        this.korean = new ArrayList<>(Arrays.asList(korean));
+    ArrayList<GrammarPart> pattern;
+    ArrayList<Integer> koreanOrder;
+    private SentencePattern(GrammarPart[] english, Integer[] koreanOrder) {
+        this.pattern = new ArrayList<>(Arrays.asList(english));
+        this.koreanOrder = new ArrayList<>(Arrays.asList(koreanOrder));
     }
 
-    public ArrayList<GrammarPart> getKorean() {
-        return korean;
+    public ArrayList<Integer> getKoreanOrder() {
+        return koreanOrder;
     }
 
-    public ArrayList<GrammarPart> getEnglish() {
-        return english;
+    public ArrayList<GrammarPart> getPattern() {
+        return pattern;
     }
 
     public int length() {
-        return english.size();
+        return pattern.size();
     }
 }

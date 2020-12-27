@@ -1,8 +1,6 @@
 package grammar;
 
 import application.Constants;
-import words.Noun;
-import words.Verb;
 import words.Word;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ public class Sentence {
     }
 
     public int nextRequest() {
-        return Constants.wordType(pattern.getEnglish().get(words.size()).getWord());
+        return Constants.wordType(pattern.getPattern().get(words.size()).getWord());
     }
 
     public void add(Word word) {
@@ -36,7 +34,7 @@ public class Sentence {
     }
 
     private Word patternWord(GrammarPart part) {
-        int index = pattern.getEnglish().indexOf(part);
+        int index = pattern.getPattern().indexOf(part);
         return index == -1 ? null : words.get(index);
     }
 
@@ -66,8 +64,8 @@ public class Sentence {
             throw new IllegalStateException("Sentence is not fully assembled.");
         }
         StringBuilder korean = new StringBuilder();
-        for (Word word : words) {
-            korean.append(word.korean + " ");
+        for (Integer koreanOrder : pattern.getKoreanOrder()) {
+            korean.append(words.get(koreanOrder).korean + " ");
         }
         return korean.toString();
     }
