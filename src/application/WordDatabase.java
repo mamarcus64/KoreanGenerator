@@ -1,19 +1,16 @@
 package application;
 
 import grammar.EnglishWordFilters;
-import words.Noun;
-import words.Verb;
 import words.Word;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 public class WordDatabase {
-    private static WordDatabase mWordDatabase;
+    private static WordDatabase instance;
     private ArrayList<Word>[] words;
 
 
@@ -40,7 +37,8 @@ public class WordDatabase {
                 String[] line = scan.nextLine().split(",");
                 try {
                     //creates a new instance of the given word subclass and adds it to the appropriate words arraylist
-                    Word word = (Word) (Class.forName("words." + EnglishWordFilters.capitalize(line[2]))
+                    Word word = (Word) (Class.forName("words." +
+                            line[2].substring(0, 1).toUpperCase() + line[2].substring(1).toLowerCase())
                             .getConstructor(String.class, String.class).newInstance(line[0], line[1]));
                     words[Constants.wordType(line[2].toLowerCase())].add(word);
                 } catch (Exception e) {
@@ -53,10 +51,10 @@ public class WordDatabase {
     }
 
     public static WordDatabase getInstance() {
-        if (mWordDatabase == null) {
-            mWordDatabase = new WordDatabase();
+        if (instance == null) {
+            instance = new WordDatabase();
         }
-        return mWordDatabase;
+        return instance;
     }
 
     public ArrayList<Word>[] getWords() {

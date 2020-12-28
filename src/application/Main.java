@@ -9,12 +9,12 @@ public class Main {
         SentenceGenerator sentenceGenerator = SentenceGenerator.getInstance();
         Scanner buffer = new Scanner(System.in);
         while (true) {
+            boolean coinFlip = Math.random() > 0.5;
             sentenceGenerator.generate();
-            System.out.println(sentenceGenerator.english());
-            System.out.println(sentenceGenerator.korean());
-            if (buffer.nextLine().equalsIgnoreCase("exit")) {
-                break;
-            }
+            System.out.println(coinFlip ? sentenceGenerator.english() : sentenceGenerator.korean());
+            buffer.nextLine();
+            System.out.println(coinFlip ? sentenceGenerator.korean() : sentenceGenerator.english());
+            buffer.nextLine();
         }
     }
 

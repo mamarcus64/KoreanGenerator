@@ -5,25 +5,38 @@ import words.Word;
 
 public class EnglishWordFilters {
 
-    public static void capitalize(Word input) {
+    private static EnglishWordFilters instance = new EnglishWordFilters();
+
+    private EnglishWordFilters() {
+
+    }
+
+    public static EnglishWordFilters getInstance() {
+        if (instance == null) {
+            instance = new EnglishWordFilters();
+        }
+        return instance;
+    }
+
+    public void capitalize(Word input) {
         if (input == null) {
             return;
         }
         input.english = capitalize(input.english);
     }
 
-    public static String capitalize(String input) {
+    public String capitalize(String input) {
         return input.length() == 0 ? input : input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }
 
-    public static void articulate(Word input) {
+    public void articulate(Word input) {
         if (input == null) {
             return;
         }
         input.english = "the " + input.english;
     }
 
-    public static void toTense(Word input, Constants.Tenses tense, Constants.Person person) {
+    public void toTense(Word input, Constants.Tenses tense, Constants.Person person) {
         if (input == null) {
             return;
         }

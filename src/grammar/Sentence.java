@@ -1,6 +1,7 @@
 package grammar;
 
 import application.Constants;
+import words.Noun;
 import words.Word;
 
 import java.util.ArrayList;
@@ -9,12 +10,16 @@ import java.util.List;
 public class Sentence {
     private List<Word> words;
     private SentencePattern pattern;
+    private EnglishWordFilters englishFilters;
+    private KoreanWordFilters koreanFilters;
     private boolean assembled;
 
     public Sentence(SentencePattern pattern) {
         this.pattern = pattern;
         assembled = false;
         words = new ArrayList<Word>(pattern.length());
+        englishFilters = EnglishWordFilters.getInstance();
+        koreanFilters = KoreanWordFilters.getInstance();
     }
 
     public boolean isAssembled() {
@@ -39,13 +44,15 @@ public class Sentence {
     }
 
     private void cleanSentence() {
-        EnglishWordFilters.articulate(patternWord(GrammarPart.SUBJECT));
-        EnglishWordFilters.articulate(patternWord(GrammarPart.DIRECT_OBJECT));
-        EnglishWordFilters.capitalize(patternWord(GrammarPart.SUBJECT));
-        EnglishWordFilters.toTense(patternWord(GrammarPart.INTRANSITIVE_VERB),
+        englishFilters.articulate(patternWord(GrammarPart.SUBJECT));
+        englishFilters.articulate(patternWord(GrammarPart.DIRECT_OBJECT));
+        englishFilters.capitalize(patternWord(GrammarPart.SUBJECT));
+        englishFilters.toTense(patternWord(GrammarPart.INTRANSITIVE_VERB),
                 Constants.Tenses.FUTURE, Constants.Person.THIRD);
-        EnglishWordFilters.toTense(patternWord(GrammarPart.TRANSITIVE_VERB),
+        englishFilters.toTense(patternWord(GrammarPart.TRANSITIVE_VERB),
                 Constants.Tenses.FUTURE, Constants.Person.THIRD);
+        koreanFilters.subjectify(patternWord(GrammarPart.SUBJECT));
+        koreanFilters.objectify((patternWord(GrammarPart.DIRECT_OBJECT)));
     }
 
     public String english() throws IllegalStateException {
