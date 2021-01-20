@@ -34,11 +34,12 @@ public class SentenceGenerator {
         return SentencePattern.pattern2;
     }
 
-    private Constants.Tense getTense() {
-        return Constants.Tense.values()[(int) (Constants.Tense.values().length * Math.random())];
+    public static Constants.Tense getTense() {
+        return Constants.Tense.PAST;
+        //return Constants.Tense.values()[(int) (Constants.Tense.values().length * Math.random())];
     }
 
-    private Constants.Honorific getHonorific() {
+    public static Constants.Honorific getHonorific() {
         return Constants.Honorific.values()[(int) (Constants.Honorific.values().length * Math.random())];
     }
 

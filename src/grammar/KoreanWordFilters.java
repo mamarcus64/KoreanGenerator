@@ -11,6 +11,10 @@ public class KoreanWordFilters {
     private final String vowels = "ᅡᅢᅣᅤᅥᅦᅧᅨᅩᅪᅫᅬᅭᅮᅯᅰᅱᅲᅳᅴᅵ";// list of vowels
     private final String tails = "ᆨᆩᆪᆫᆬᆭᆮᆯᆰᆱᆲᆳᆴᆵᆶᆷᆸᆹᆺᆻᆼᆽᆾᆿᇀᇁᇂ";// list of tails
 
+    private final String leadsOutOfPosition = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+    private final String vowelsOutOfPosition = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ";
+    private final String tailsOutOfPosition = "ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ";
+
     public enum Position {
         LEAD, VOWEL, TAIL;
     }
@@ -26,27 +30,57 @@ public class KoreanWordFilters {
 
     }
 
+    private String combineBlocks(String initial, String appended) {
+        if (endsInVowel(initial)) {
+            String[] appendedParts = toLetters(appended);
+            String[] resultParts = toLetters(initial);
+            switch (appendedParts[1]) {
+                case "ㅏ":
+                    if (appendedParts[0].equals("ㅎ")) {
+                        resultParts[1] = "ㅐ";
+                    } else {
+                        resultParts[1] = "ㅏ";
+                    }
+                    break;
+                case "ㅗ":
+                    resultParts[1] = "ㅘ";
+                    break;
+                case "ㅓ":
+                    resultParts[1] = "ㅓ";
+                    break;
+                case "ㅜ":
+                case "ㅣ":
+                    resultParts[1] = "ㅝ";
+                    break;
+                case "ㅕ":
+                    resultParts[1] = "ㅕ";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Illegal vowel in verb stem.");
+            }
+            resultParts[2] = appendedParts[2];
+            return toBlock(resultParts);
+        } else {
+            return initial + appended;
+        }
+    }
+
     public void tensify(Word input, Constants.Tense tense, Constants.Honorific honorific) {
         if (input == null) {
             return;
         }
         String stem = input.korean.substring(0, input.korean.length() - 1);
         StringBuilder koreanResult = new StringBuilder(stem);
+        String[] lastSyllable = toLetters(stem.charAt(stem.length() - 1));
         switch (tense) {
             case PAST:
-                String[] lastSyllable = toLetters(stem.charAt(stem.length() - 1));
-                if (endsInVowel(stem)) {
-                    switch (lastSyllable[1]) {
-                        case "ㅏ":
-
-                    }
+                String updatedEnding;
+                if (lastSyllable[1].equals("ㅏ") || lastSyllable[1].equals("ㅗ")) {
+                    updatedEnding = combineBlocks(toBlock(lastSyllable), "았");
                 } else {
-                    if (lastSyllable[1].equals("ㅏ") || lastSyllable[1].equals("ㅗ")) {
-                        koreanResult.setCharAt(koreanResult.length() - 1, '았');
-                    } else {
-                        koreanResult.setCharAt(koreanResult.length() - 1, '었');
-                    }
+                    updatedEnding = combineBlocks(toBlock(lastSyllable), "었");
                 }
+                koreanResult.replace(koreanResult.length() - 1, koreanResult.length(), updatedEnding);
                 break;
             case PRESENT:
                 break;
@@ -56,6 +90,25 @@ public class KoreanWordFilters {
                 break;
             default:
                 break;
+        }
+        switch (honorific) {
+            case PLAIN:
+                koreanResult.replace(koreanResult.length() - 1, koreanResult.length(),
+                        combineBlocks(toBlock(lastSyllable), "다"));
+                break;
+            case INFORMAL_LOW:
+                koreanResult.replace(koreanResult.length() - 1, koreanResult.length(),
+                        combineBlocks(toBlock(lastSyllable), "어"));
+                break;
+            case INFORMAL_HIGH:
+                koreanResult.replace(koreanResult.length() - 1, koreanResult.length(),
+                        combineBlocks(toBlock(lastSyllable), "어요"));
+                break;
+            case FORMAL_HIGH:
+                koreanResult.replace(koreanResult.length() - 1, koreanResult.length(),
+                        combineBlocks(toBlock(lastSyllable), "습니다"));
+                break;
+            default:
         }
         input.korean = koreanResult.toString();
     }
@@ -113,9 +166,18 @@ public class KoreanWordFilters {
     public String toBlock(String[] letters) {
         final int hangulUnicodeStartValue = 44032;
         return Character.toString((char) (hangulUnicodeStartValue
-                + 588 * leads.indexOf(letterInPosition(letters[0], Position.LEAD))
-                + 28 * vowels.indexOf(letterInPosition(letters[1], Position.VOWEL))
-                + tails.indexOf(letterInPosition(letters[2], Position.TAIL)) + 1));
+                + 588 * leadsOutOfPosition.indexOf(letters[0])
+                + 28 * vowelsOutOfPosition.indexOf(letters[1])
+                + tailsOutOfPosition.indexOf(letters[2]) + 1));
+    }
+
+    public String addTail(String block, String tail) {
+        return addTail(toLetters(block), tail);
+    }
+
+    public String addTail(String[] block, String tail) {
+        String[] newBlock = new String[] {block[0], block[1], tail};
+        return toBlock(newBlock);
     }
 
     public String letterInPosition(String letter, Position pos) throws IllegalArgumentException {
@@ -169,7 +231,9 @@ public class KoreanWordFilters {
                 case 'ㅡ': return vowels.substring(18, 19);
                 case 'ㅢ': return vowels.substring(19, 20);
                 case 'ㅣ': return vowels.substring(20, 21);
-                default: throw new IllegalArgumentException();
+                default:
+                    System.out.println(letter);
+                    throw new IllegalArgumentException();
             }
         } else {
             switch (letter) {

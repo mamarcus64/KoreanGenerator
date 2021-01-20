@@ -10,8 +10,6 @@ public class Main {
     public static void main(String[] args) {
         SentenceGenerator sentenceGenerator = SentenceGenerator.getInstance();
         Scanner buffer = new Scanner(System.in);
-        System.out.println("block: " + KoreanWordFilters.getInstance().toBlock(new String[] {"ㄷ", "ㅜ", "ㅁ"}));
-        System.out.println("block: " + KoreanWordFilters.getInstance().toBlock(new String[] {"ㅈ", "ㅏ", "ㄴ"}));
         while (true) {
             boolean coinFlip = Math.random() > 0.5;
             sentenceGenerator.generate();

@@ -1,6 +1,7 @@
 package grammar;
 
 import application.Constants;
+import application.SentenceGenerator;
 import words.Word;
 
 import java.util.ArrayList;
@@ -58,8 +59,8 @@ public class Sentence {
                 Constants.Tense.FUTURE_CONFIDENT, Constants.Person.THIRD);
         koreanFilters.subjectify(patternWord(GrammarPart.SUBJECT));
         koreanFilters.objectify((patternWord(GrammarPart.DIRECT_OBJECT)));
-        //koreanFilters.tensify(patternWord(GrammarPart.TRANSITIVE_VERB));
-        //koreanFilters.tensify(patternWord(GrammarPart.INTRANSITIVE_VERB));
+        koreanFilters.tensify(patternWord(GrammarPart.TRANSITIVE_VERB), SentenceGenerator.getTense(), SentenceGenerator.getHonorific());
+        koreanFilters.tensify(patternWord(GrammarPart.INTRANSITIVE_VERB), SentenceGenerator.getTense(), SentenceGenerator.getHonorific());
 
     }
 
