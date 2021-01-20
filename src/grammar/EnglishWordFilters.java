@@ -36,7 +36,7 @@ public class EnglishWordFilters {
         input.english = "the " + input.english;
     }
 
-    public void toTense(Word input, Constants.Tenses tense, Constants.Person person) {
+    public void toTense(Word input, Constants.Tense tense, Constants.Person person) {
         if (input == null) {
             return;
         }

@@ -30,8 +30,20 @@ public class SentenceGenerator {
         words = WordDatabase.getInstance().getWords();
     }
 
+    private SentencePattern getPattern() {
+        return SentencePattern.pattern2;
+    }
+
+    private Constants.Tense getTense() {
+        return Constants.Tense.values()[(int) (Constants.Tense.values().length * Math.random())];
+    }
+
+    private Constants.Honorific getHonorific() {
+        return Constants.Honorific.values()[(int) (Constants.Honorific.values().length * Math.random())];
+    }
+
     public void generate() {
-        sentence = new Sentence(SentencePattern.pattern2);
+        sentence = new Sentence(getPattern(), getTense(), getHonorific());
         while (!sentence.isAssembled()) {
             sentence.add(words[sentence.nextRequest()].get
                     ((int) (Math.random() * words[sentence.nextRequest()].size())));
@@ -45,4 +57,6 @@ public class SentenceGenerator {
     public String korean() {
         return sentence.korean();
     }
+
+    public String metadata() { return sentence.metadata(); }
 }

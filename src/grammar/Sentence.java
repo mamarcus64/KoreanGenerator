@@ -1,7 +1,6 @@
 package grammar;
 
 import application.Constants;
-import words.Noun;
 import words.Word;
 
 import java.util.ArrayList;
@@ -13,9 +12,15 @@ public class Sentence {
     private EnglishWordFilters englishFilters;
     private KoreanWordFilters koreanFilters;
     private boolean assembled;
+    private Constants.Tense tense;
+    private Constants.Honorific honorific;
+    private Constants.Person person;
 
-    public Sentence(SentencePattern pattern) {
+    public Sentence(SentencePattern pattern, Constants.Tense tense, Constants.Honorific honorific) {
         this.pattern = pattern;
+        this.tense = tense;
+        this.honorific = honorific;
+        this.person = Constants.Person.THIRD;
         assembled = false;
         words = new ArrayList<Word>(pattern.length());
         englishFilters = EnglishWordFilters.getInstance();
@@ -48,11 +53,14 @@ public class Sentence {
         englishFilters.articulate(patternWord(GrammarPart.DIRECT_OBJECT));
         englishFilters.capitalize(patternWord(GrammarPart.SUBJECT));
         englishFilters.toTense(patternWord(GrammarPart.INTRANSITIVE_VERB),
-                Constants.Tenses.FUTURE, Constants.Person.THIRD);
+                Constants.Tense.FUTURE_CONFIDENT, Constants.Person.THIRD);
         englishFilters.toTense(patternWord(GrammarPart.TRANSITIVE_VERB),
-                Constants.Tenses.FUTURE, Constants.Person.THIRD);
+                Constants.Tense.FUTURE_CONFIDENT, Constants.Person.THIRD);
         koreanFilters.subjectify(patternWord(GrammarPart.SUBJECT));
         koreanFilters.objectify((patternWord(GrammarPart.DIRECT_OBJECT)));
+        //koreanFilters.tensify(patternWord(GrammarPart.TRANSITIVE_VERB));
+        //koreanFilters.tensify(patternWord(GrammarPart.INTRANSITIVE_VERB));
+
     }
 
     public String english() throws IllegalStateException {
@@ -75,5 +83,12 @@ public class Sentence {
             korean.append(words.get(koreanOrder).korean + " ");
         }
         return korean.toString();
+    }
+
+    public String metadata() throws IllegalStateException {
+        if (!assembled) {
+            throw new IllegalStateException("Sentence is not fully assembled.");
+        }
+        return (honorific + " " + tense).toLowerCase().replace("_", " ");
     }
 }

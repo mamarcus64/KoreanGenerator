@@ -8,10 +8,18 @@ public class Constants {
     public static final int[] EXCLUDED_LESSONS = {2};
     public static boolean DEBUG_ON = true;
 
-    public enum Tenses {
+    public enum Tense {
         PRESENT,
         PAST,
-        FUTURE
+        FUTURE_NEUTRAL,
+        FUTURE_CONFIDENT
+    }
+
+    public enum Honorific {
+        PLAIN,
+        INFORMAL_LOW,
+        INFORMAL_HIGH,
+        FORMAL_HIGH
     }
 
     public enum Person {

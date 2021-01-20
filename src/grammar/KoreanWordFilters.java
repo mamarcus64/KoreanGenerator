@@ -1,14 +1,15 @@
 package grammar;
 
+import application.Constants;
 import words.Word;
 
 public class KoreanWordFilters {
 
     private static KoreanWordFilters instance;
 
-    private final String initials = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";// list of initials
+    private final String leads = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";// list of initials
     private final String vowels = "ᅡᅢᅣᅤᅥᅦᅧᅨᅩᅪᅫᅬᅭᅮᅯᅰᅱᅲᅳᅴᅵ";// list of vowels
-    private final String finals = "ᆨᆩᆪᆫᆬᆭᆮᆯᆰᆱᆲᆳᆴᆵᆶᆷᆸᆹᆺᆻᆼᆽᆾᆿᇀᇁᇂ";// list of tails
+    private final String tails = "ᆨᆩᆪᆫᆬᆭᆮᆯᆰᆱᆲᆳᆴᆵᆶᆷᆸᆹᆺᆻᆼᆽᆾᆿᇀᇁᇂ";// list of tails
 
     public enum Position {
         LEAD, VOWEL, TAIL;
@@ -23,6 +24,40 @@ public class KoreanWordFilters {
 
     private KoreanWordFilters() {
 
+    }
+
+    public void tensify(Word input, Constants.Tense tense, Constants.Honorific honorific) {
+        if (input == null) {
+            return;
+        }
+        String stem = input.korean.substring(0, input.korean.length() - 1);
+        StringBuilder koreanResult = new StringBuilder(stem);
+        switch (tense) {
+            case PAST:
+                String[] lastSyllable = toLetters(stem.charAt(stem.length() - 1));
+                if (endsInVowel(stem)) {
+                    switch (lastSyllable[1]) {
+                        case "ㅏ":
+
+                    }
+                } else {
+                    if (lastSyllable[1].equals("ㅏ") || lastSyllable[1].equals("ㅗ")) {
+                        koreanResult.setCharAt(koreanResult.length() - 1, '았');
+                    } else {
+                        koreanResult.setCharAt(koreanResult.length() - 1, '었');
+                    }
+                }
+                break;
+            case PRESENT:
+                break;
+            case FUTURE_NEUTRAL:
+                break;
+            case FUTURE_CONFIDENT:
+                break;
+            default:
+                break;
+        }
+        input.korean = koreanResult.toString();
     }
 
     public void subjectify(Word input) {
@@ -75,6 +110,14 @@ public class KoreanWordFilters {
         return new String[] {lead, vowel, tail};
     }
 
+    public String toBlock(String[] letters) {
+        final int hangulUnicodeStartValue = 44032;
+        return Character.toString((char) (hangulUnicodeStartValue
+                + 588 * leads.indexOf(letterInPosition(letters[0], Position.LEAD))
+                + 28 * vowels.indexOf(letterInPosition(letters[1], Position.VOWEL))
+                + tails.indexOf(letterInPosition(letters[2], Position.TAIL)) + 1));
+    }
+
     public String letterInPosition(String letter, Position pos) throws IllegalArgumentException {
         return letterInPosition(letter.charAt(0), pos);
     }
@@ -82,25 +125,25 @@ public class KoreanWordFilters {
     public String letterInPosition(char letter, Position pos) throws IllegalArgumentException {
         if (pos == Position.LEAD) {
             switch(letter) {
-                case 'ㄱ': return initials.substring(0, 1);
-                case 'ㄲ': return initials.substring(1, 2);
-                case 'ㄴ': return initials.substring(2, 3);
-                case 'ㄷ': return initials.substring(3, 4);
-                case 'ㄸ': return initials.substring(4, 5);
-                case 'ㄹ': return initials.substring(5, 6);
-                case 'ㅁ': return initials.substring(6, 7);
-                case 'ㅂ': return initials.substring(7, 8);
-                case 'ㅃ': return initials.substring(8, 9);
-                case 'ㅅ': return initials.substring(9, 10);
-                case 'ㅆ': return initials.substring(10, 11);
-                case 'ㅇ': return initials.substring(11, 12);
-                case 'ㅈ': return initials.substring(12, 13);
-                case 'ㅉ': return initials.substring(13, 14);
-                case 'ㅊ': return initials.substring(14, 15);
-                case 'ㅋ': return initials.substring(15, 16);
-                case 'ㅌ': return initials.substring(16, 17);
-                case 'ㅍ': return initials.substring(17, 18);
-                case 'ㅎ': return initials.substring(18, 19);
+                case 'ㄱ': return leads.substring(0, 1);
+                case 'ㄲ': return leads.substring(1, 2);
+                case 'ㄴ': return leads.substring(2, 3);
+                case 'ㄷ': return leads.substring(3, 4);
+                case 'ㄸ': return leads.substring(4, 5);
+                case 'ㄹ': return leads.substring(5, 6);
+                case 'ㅁ': return leads.substring(6, 7);
+                case 'ㅂ': return leads.substring(7, 8);
+                case 'ㅃ': return leads.substring(8, 9);
+                case 'ㅅ': return leads.substring(9, 10);
+                case 'ㅆ': return leads.substring(10, 11);
+                case 'ㅇ': return leads.substring(11, 12);
+                case 'ㅈ': return leads.substring(12, 13);
+                case 'ㅉ': return leads.substring(13, 14);
+                case 'ㅊ': return leads.substring(14, 15);
+                case 'ㅋ': return leads.substring(15, 16);
+                case 'ㅌ': return leads.substring(16, 17);
+                case 'ㅍ': return leads.substring(17, 18);
+                case 'ㅎ': return leads.substring(18, 19);
                 default: throw new IllegalArgumentException();
             }
         } else if (pos == Position.VOWEL) {
@@ -130,33 +173,33 @@ public class KoreanWordFilters {
             }
         } else {
             switch (letter) {
-                case 'ㄱ': return finals.substring(0, 1);
-                case 'ㄲ': return finals.substring(1, 2);
-                case 'ㄳ': return finals.substring(2, 3);
-                case 'ㄴ': return finals.substring(3, 4);
-                case 'ㄵ': return finals.substring(4, 5);
-                case 'ㄶ': return finals.substring(5, 6);
-                case 'ㄷ': return finals.substring(6, 7);
-                case 'ㄹ': return finals.substring(7, 8);
-                case 'ㄺ': return finals.substring(8, 9);
-                case 'ㄻ': return finals.substring(9, 10);
-                case 'ㄼ': return finals.substring(10, 11);
-                case 'ㄽ': return finals.substring(11, 12);
-                case 'ㄾ': return finals.substring(12, 13);
-                case 'ㄿ': return finals.substring(13, 14);
-                case 'ㅀ': return finals.substring(14, 15);
-                case 'ㅁ': return finals.substring(15, 16);
-                case 'ㅂ': return finals.substring(16, 17);
-                case 'ㅄ': return finals.substring(17, 18);
-                case 'ㅅ': return finals.substring(18, 19);
-                case 'ㅆ': return finals.substring(19, 20);
-                case 'ㅇ': return finals.substring(20, 21);
-                case 'ㅈ': return finals.substring(21, 22);
-                case 'ㅊ': return finals.substring(22, 23);
-                case 'ㅋ': return finals.substring(23, 24);
-                case 'ㅌ': return finals.substring(24, 25);
-                case 'ㅍ': return finals.substring(25, 26);
-                case 'ㅎ': return finals.substring(26, 27);
+                case 'ㄱ': return tails.substring(0, 1);
+                case 'ㄲ': return tails.substring(1, 2);
+                case 'ㄳ': return tails.substring(2, 3);
+                case 'ㄴ': return tails.substring(3, 4);
+                case 'ㄵ': return tails.substring(4, 5);
+                case 'ㄶ': return tails.substring(5, 6);
+                case 'ㄷ': return tails.substring(6, 7);
+                case 'ㄹ': return tails.substring(7, 8);
+                case 'ㄺ': return tails.substring(8, 9);
+                case 'ㄻ': return tails.substring(9, 10);
+                case 'ㄼ': return tails.substring(10, 11);
+                case 'ㄽ': return tails.substring(11, 12);
+                case 'ㄾ': return tails.substring(12, 13);
+                case 'ㄿ': return tails.substring(13, 14);
+                case 'ㅀ': return tails.substring(14, 15);
+                case 'ㅁ': return tails.substring(15, 16);
+                case 'ㅂ': return tails.substring(16, 17);
+                case 'ㅄ': return tails.substring(17, 18);
+                case 'ㅅ': return tails.substring(18, 19);
+                case 'ㅆ': return tails.substring(19, 20);
+                case 'ㅇ': return tails.substring(20, 21);
+                case 'ㅈ': return tails.substring(21, 22);
+                case 'ㅊ': return tails.substring(22, 23);
+                case 'ㅋ': return tails.substring(23, 24);
+                case 'ㅌ': return tails.substring(24, 25);
+                case 'ㅍ': return tails.substring(25, 26);
+                case 'ㅎ': return tails.substring(26, 27);
                 default: throw new IllegalArgumentException();
             }
         }
